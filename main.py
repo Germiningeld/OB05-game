@@ -12,8 +12,24 @@ pygame.display.set_caption("Шаткий баланс")
 # Настройка таймера
 clock = pygame.time.Clock()
 
+# Функция для отрисовки градиентного фона
+def draw_gradient_background(screen, start_color, end_color):
+    """Отрисовка градиента от верхней к нижней части экрана."""
+    for i in range(SCREEN_HEIGHT):
+        # Расчет промежуточного цвета для градиента
+        r = start_color[0] + (end_color[0] - start_color[0]) * i // SCREEN_HEIGHT
+        g = start_color[1] + (end_color[1] - start_color[1]) * i // SCREEN_HEIGHT
+        b = start_color[2] + (end_color[2] - start_color[2]) * i // SCREEN_HEIGHT
+        pygame.draw.line(screen, (r, g, b), (0, i), (SCREEN_WIDTH, i))
+
+# Функция для отрисовки очков
+def draw_score(screen, score):
+    font = pygame.font.SysFont(None, 36)
+    score_text = font.render(f"Очки: {score}", True, (0, 0, 0))
+    screen.blit(score_text, (10, 10))
+
 def main():
-    # Основной игровой цикл
+    score = 0  # Инициализация счетчика очков
     running = True
     while running:
         # Обработка событий
@@ -22,9 +38,11 @@ def main():
                 running = False
 
         # Обновление экрана
-        screen.fill((255, 255, 255))  # Заливка белым цветом
+        # Заливка градиентом (от голубого к белому)
+        draw_gradient_background(screen, (173, 216, 230), (255, 255, 255))
 
-        # Отрисовка элементов (пока пусто)
+        # Отрисовка очков
+        draw_score(screen, score)
 
         # Обновление окна
         pygame.display.flip()
