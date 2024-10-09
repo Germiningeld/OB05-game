@@ -12,11 +12,33 @@ pygame.display.set_caption("Шаткий баланс")
 # Настройка таймера
 clock = pygame.time.Clock()
 
+# Параметры платформы (доски)
+PLATFORM_WIDTH = 300
+PLATFORM_HEIGHT = 20
+PLATFORM_COLOR = (100, 100, 100)
+platform_pos = [SCREEN_WIDTH // 2, SCREEN_HEIGHT - 150]  # Центр экрана по горизонтали, высота фиксирована
+
+# Параметры шарнира
+JOINT_RADIUS = 10
+JOINT_COLOR = (150, 50, 50)
+
+# Функция для отрисовки платформы с шарниром
+def draw_platform_with_joint(screen, platform_pos):
+    # Создаем прямоугольник для платформы
+    platform_rect = pygame.Rect(0, 0, PLATFORM_WIDTH, PLATFORM_HEIGHT)
+    platform_rect.center = platform_pos
+
+    # Отрисовка платформы (без вращения)
+    pygame.draw.rect(screen, PLATFORM_COLOR, platform_rect)
+
+    # Отрисовка шарнира (шарика) под платформой
+    joint_pos = (platform_pos[0], platform_pos[1] + PLATFORM_HEIGHT // 2 + JOINT_RADIUS)  # Шарнир под платформой
+    pygame.draw.circle(screen, JOINT_COLOR, joint_pos, JOINT_RADIUS)
+
 # Функция для отрисовки градиентного фона
 def draw_gradient_background(screen, start_color, end_color):
     """Отрисовка градиента от верхней к нижней части экрана."""
     for i in range(SCREEN_HEIGHT):
-        # Расчет промежуточного цвета для градиента
         r = start_color[0] + (end_color[0] - start_color[0]) * i // SCREEN_HEIGHT
         g = start_color[1] + (end_color[1] - start_color[1]) * i // SCREEN_HEIGHT
         b = start_color[2] + (end_color[2] - start_color[2]) * i // SCREEN_HEIGHT
@@ -38,8 +60,10 @@ def main():
                 running = False
 
         # Обновление экрана
-        # Заливка градиентом (от голубого к белому)
-        draw_gradient_background(screen, (173, 216, 230), (255, 255, 255))
+        draw_gradient_background(screen, (173, 216, 230), (255, 255, 255))  # Заливка градиентом
+
+        # Отрисовка платформы с шарниром
+        draw_platform_with_joint(screen, platform_pos)
 
         # Отрисовка очков
         draw_score(screen, score)
